@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class StudentDB {
     private static Connection conn = null;
     private static Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) {
-        StudentDB studentDB = new StudentDB();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -17,25 +17,79 @@ public class StudentDB {
             conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
             System.out.println("Connection Successful!");
 
-            System.out.print("Enter Choice: ");
-            int choice= sc.nextInt();
-            sc.nextLine();
-            switch(choice) {
-                case 1:insertRecord();
-                       break;
-                case 2:selectRecord();
+            boolean exit = false;
+            while (!exit) {
+                System.out.println("\nChoose an operation:");
+                System.out.println("1. Insert Record");
+                System.out.println("2. View Records");
+                System.out.println("3. Update Record");
+                System.out.println("4. Delete Record");
+                System.out.println("5. Exit");
+                System.out.print("Enter Choice: ");
+                int choice = sc.nextInt();
+                sc.nextLine();
+
+                switch (choice) {
+                    case 1:
+                        insertRecord();
                         break;
-
-                case 3:updateRecord();
-                       break;
-                default:
-                    System.out.println("Please enter a valid choice");
-                    break;
+                    case 2:
+                        selectRecord();
+                        break;
+                    case 3:
+                        updateRecord();
+                        break;
+                    case 4:
+                        deleteRecord();
+                        break;
+                    case 5:
+                        exit = true;
+                        System.out.println("Exiting...");
+                        break;
+                    default:
+                        System.out.println("Please enter a valid choice.");
+                }
             }
-
 
         } catch (Exception e) {
             System.out.println("Connection Failed: " + e.getMessage());
+        }
+    }
+
+    private static void insertRecord() throws SQLException {
+        System.out.print("Enter name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter percentage: ");
+        double percentage = sc.nextDouble();
+        sc.nextLine();
+
+        System.out.print("Enter address: ");
+        String address = sc.nextLine();
+
+        String sql = "INSERT INTO studentjdbc (name, percentage, address) VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+        preparedStatement.setString(1, name);
+        preparedStatement.setDouble(2, percentage);
+        preparedStatement.setString(3, address);
+
+        int row = preparedStatement.executeUpdate();
+        if (row > 0) {
+            System.out.println("Record inserted successfully.");
+        }
+    }
+
+    private static void selectRecord() throws SQLException {
+        String sql = "SELECT * FROM studentjdbc";
+        Statement statement = conn.createStatement();
+        ResultSet result = statement.executeQuery(sql);
+
+        while (result.next()) {
+            int roll = result.getInt("roll");
+            String name = result.getString("name");
+            double percentage = result.getDouble("percentage");
+            String address = result.getString("address");
+            System.out.println("Roll: " + roll + " | Name: " + name + " | Percentage: " + percentage + " | Address: " + address);
         }
     }
 
@@ -94,54 +148,20 @@ public class StudentDB {
         }
     }
 
-
-
-    private static void insertRecord() throws SQLException {
-        System.out.print("Enter name: ");
-        String name = sc.nextLine();
-
-        System.out.print("Enter percentage: ");
-        double percentage = sc.nextDouble();
+    private static void deleteRecord() throws SQLException {
+        System.out.print("Enter rollno to delete the record: ");
+        int roll = sc.nextInt();
         sc.nextLine();
 
-        System.out.print("Enter address: ");
-        String address = sc.nextLine();
-
-        String sql = "INSERT INTO studentjdbc (name, percentage, address) VALUES (?, ?, ?)";
+        String sql = "DELETE FROM studentjdbc WHERE roll = ?";
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
-        preparedStatement.setString(1, name);
-        preparedStatement.setDouble(2, percentage);
-        preparedStatement.setString(3, address);
+        preparedStatement.setInt(1, roll);
 
         int row = preparedStatement.executeUpdate();
         if (row > 0) {
-            System.out.println("Record inserted successfully.");
+            System.out.println("Record deleted successfully.");
+        } else {
+            System.out.println("No record found with roll number: " + roll);
         }
-    }
-    private static void selectRecord() throws SQLException {
-        System.out.println("inside select");
-//        int id= sc.nextInt();
-//        sc.nextLine();
-//        String sql="select * from studentjdbc where roll="+id;
-        String sql="select * from studentjdbc";
-        Statement statement=conn.createStatement();
-        ResultSet result=statement.executeQuery(sql);
-        while(result.next()){
-            int rolln= result.getInt("roll");
-            String names= result.getString("name");
-            int percent= result.getInt("percentage");
-            String addresss= result.getString("address");
-            System.out.println("Roll: "+rolln+" Name: "+names+" Percentage: "+percent+" Address: "+addresss);
-        }
-
-
-
-
-
     }
 }
-
-
-
-
-
