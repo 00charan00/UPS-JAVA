@@ -25,6 +25,9 @@ public class StudentDB {
                        break;
                 case 2:selectRecord();
                         break;
+
+                case 3:updateRecord();
+                       break;
                 default:
                     System.out.println("Please enter a valid choice");
                     break;
@@ -35,6 +38,62 @@ public class StudentDB {
             System.out.println("Connection Failed: " + e.getMessage());
         }
     }
+
+    public static void updateRecord() throws SQLException {
+        System.out.print("Enter rollno to update the record: ");
+        int roll = sc.nextInt();
+        sc.nextLine();
+
+        String sql = "SELECT * FROM studentjdbc WHERE roll = ?";
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+        preparedStatement.setInt(1, roll);
+        ResultSet res = preparedStatement.executeQuery();
+
+        if (res.next()) {
+            System.out.println("Current Record - Name: " + res.getString("name") + " | Percentage: " + res.getDouble("percentage") + " | Address: " + res.getString("address"));
+            System.out.println("Choose the field to update: 1. Name 2. Percentage 3. Address");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            String updateField = "";
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter new name: ");
+                    updateField = "name";
+                    break;
+                case 2:
+                    System.out.print("Enter new percentage: ");
+                    updateField = "percentage";
+                    break;
+                case 3:
+                    System.out.print("Enter new address: ");
+                    updateField = "address";
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    return;
+            }
+
+            String newValue = sc.nextLine();
+            sql = "UPDATE studentjdbc SET " + updateField + " = ? WHERE roll = ?";
+            preparedStatement = conn.prepareStatement(sql);
+
+            if (updateField.equals("percentage")) {
+                preparedStatement.setDouble(1, Double.parseDouble(newValue));
+            } else {
+                preparedStatement.setString(1, newValue);
+            }
+            preparedStatement.setInt(2, roll);
+
+            int row = preparedStatement.executeUpdate();
+            if (row > 0) {
+                System.out.println("Record updated successfully.");
+            }
+        } else {
+            System.out.println("No record found with roll number: " + roll);
+        }
+    }
+
 
 
     private static void insertRecord() throws SQLException {
@@ -74,5 +133,15 @@ public class StudentDB {
             String addresss= result.getString("address");
             System.out.println("Roll: "+rolln+" Name: "+names+" Percentage: "+percent+" Address: "+addresss);
         }
+
+
+
+
+
     }
 }
+
+
+
+
+

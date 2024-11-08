@@ -3,7 +3,7 @@ package com.charan.Programs;
 import java.util.*;
 
 public class HotelCheckin {
-    private Set<Integer> hmap = new HashSet<>();
+    private HashSet<Integer> hmap = new HashSet<>();
 
     public void checkIn(int id) {
         hmap.add(id);

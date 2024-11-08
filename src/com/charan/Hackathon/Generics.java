@@ -2,14 +2,14 @@ package com.charan.Hackathon;
 
 import java.util.*;
 
-class Box<t> {
-    private t data;
+class Box<T> {
+    private T data;
 
-    public Box(t data) {
+    public Box(T data) {
         this.data = data;
     }
 
-    public t getdata() {
+    public T getdata() {
         return data;
     }
 }
@@ -18,6 +18,7 @@ class Demo {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
+        sc.nextLine();
         Box<Integer> bi = new Box<>(n);
         System.out.println(bi.getdata());
         String str = sc.nextLine();

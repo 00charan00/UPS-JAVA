@@ -36,11 +36,9 @@ class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "name='" + name + '\'' +
+        return  "Name=" + name+
                 ", price=" + price +
-                ", quantity=" + quantity +
-                '}';
+                ", quantity=" + quantity;
     }
 }
 
@@ -61,9 +59,7 @@ class InventoryManager {
         products.add(product);
     }
 
-    public void removeProduct(String productName) {
-        products.removeIf(p -> p.getName().equalsIgnoreCase(productName));
-    }
+
 
     public void displayProducts() {
         if (products.isEmpty()) {
@@ -86,18 +82,9 @@ class InventoryManager {
     public static void main(String[] args) {
         InventoryManager inventory = new InventoryManager();
 
-        inventory.addProduct(new Product("Laptop", 1000.0, 5));
-        inventory.addProduct(new Product("Smartphone", 700.0, 10));
-        inventory.addProduct(new Product("Tablet", 400.0, 3));
-
-        System.out.println("Inventory:");
+        inventory.addProduct(new Product("Node", 12, 5));
         inventory.displayProducts();
-
-        inventory.addProduct(new Product("Laptop", 1000.0, 2));
-
-        inventory.displayProducts();
-
-        inventory.removeProduct("Tablet");
+        inventory.addProduct(new Product("Laptop", 10, 2));
         inventory.displayProducts();
 
         System.out.println("\nTotal: " + inventory.getTotalInventoryValue());
