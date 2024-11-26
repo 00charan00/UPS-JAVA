@@ -9,6 +9,7 @@ public class ArrayListMethods {
         fruits.add("Banana");
         fruits.add("Orange");
         fruits.add("Mango");
+        fruits.add("Mango");
 
         String fruitAtIndex2 = fruits.get(2);
         System.out.println(fruitAtIndex2);

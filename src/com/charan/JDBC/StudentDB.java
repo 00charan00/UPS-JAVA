@@ -1,12 +1,14 @@
 package com.charan.JDBC;
 import java.sql.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class StudentDB {
-    private static Connection conn = null;
+    private static Connection conn;
+
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+        System.out.println(conn);
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
@@ -16,6 +18,7 @@ public class StudentDB {
 
             conn = DriverManager.getConnection(dbUrl, dbUser, dbPass);
             System.out.println("Connection Successful!");
+            System.out.println(conn);
 
             boolean exit = false;
             while (!exit) {
@@ -25,6 +28,7 @@ public class StudentDB {
                 System.out.println("3. Update Record");
                 System.out.println("4. Delete Record");
                 System.out.println("5. Exit");
+                System.out.println("6. Transaction");
                 System.out.print("Enter Choice: ");
                 int choice = sc.nextInt();
                 sc.nextLine();
@@ -45,6 +49,9 @@ public class StudentDB {
                     case 5:
                         exit = true;
                         System.out.println("Exiting...");
+                        break;
+                    case 6:
+                        transaction();
                         break;
                     default:
                         System.out.println("Please enter a valid choice.");
@@ -83,7 +90,6 @@ public class StudentDB {
         String sql = "SELECT * FROM studentjdbc";
         Statement statement = conn.createStatement();
         ResultSet result = statement.executeQuery(sql);
-
         while (result.next()) {
             int roll = result.getInt("roll");
             String name = result.getString("name");
@@ -123,6 +129,7 @@ public class StudentDB {
                     System.out.print("Enter new address: ");
                     updateField = "address";
                     break;
+
                 default:
                     System.out.println("Invalid choice.");
                     return;
@@ -164,4 +171,29 @@ public class StudentDB {
             System.out.println("No record found with roll number: " + roll);
         }
     }
+
+
+    public static void transaction() throws SQLException {
+        conn.setAutoCommit(false);
+
+        String sql1 = "insert into studentjdbc (name, percentage, address) values ('Anshalin', '98', 'Nagercoil')";
+        String sql2 = "UPDATE studentjdbc SET name='shaaruuu' WHERE percentage=98";
+        PreparedStatement preparedStatement1 = conn.prepareStatement(sql1);
+        int row1 = preparedStatement1.executeUpdate();
+
+        PreparedStatement preparedStatement2 = conn.prepareStatement(sql2);
+        int row2 = preparedStatement2.executeUpdate();
+
+        if (row1 > 0 && row2 > 0) {
+            conn.commit();
+            System.out.println("Transaction successful.");
+        } else {
+            conn.rollback();
+            System.out.println("Transaction failed and rolled back.");
+        }
+
+
+    }
+
+
 }
