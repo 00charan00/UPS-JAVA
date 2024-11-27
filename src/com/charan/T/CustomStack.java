@@ -1,18 +1,16 @@
 package com.charan.T;
 
 public class CustomStack {
-    private int[] stack;  // Array to store stack elements
-    private int top;      // Index of the top element
-    private int capacity; // Maximum capacity of the stack
+    private int[] stack;
+    private int top;
+    private int capacity;
 
-    // Constructor to initialize the stack
     public CustomStack(int capacity) {
         this.capacity = capacity;
         stack = new int[capacity];
-        top = -1; // Stack is initially empty
+        top = -1;
     }
 
-    // Push operation: Add an element to the stack
     public void push(int element) {
         if (top == capacity - 1) {
             System.out.println("Stack Overflow! Cannot add more elements.");
@@ -22,39 +20,33 @@ public class CustomStack {
         System.out.println("Pushed: " + element);
     }
 
-    // Pop operation: Remove the top element from the stack
     public int pop() {
         if (isEmpty()) {
             System.out.println("Stack Underflow! No elements to pop.");
-            return -1; // Return -1 if stack is empty
+            return -1;
         }
         return stack[top--];
     }
 
-    // Peek operation: Retrieve the top element
     public int peek() {
         if (isEmpty()) {
             System.out.println("Stack is empty! No top element.");
-            return -1; // Return -1 if stack is empty
+            return -1;
         }
         return stack[top];
     }
 
-    // Check if the stack is empty
     public boolean isEmpty() {
         return top == -1;
     }
 
-    // Count the total number of elements in the stack
     public int count() {
-        return top + 1; // Total elements = top index + 1
+        return top + 1;
     }
 
-    // Main method to test the stack
     public static void main(String[] args) {
         CustomStack myStack = new CustomStack(5);
 
-        // Perform stack operations
         myStack.push(10);
         myStack.push(20);
         myStack.push(30);
